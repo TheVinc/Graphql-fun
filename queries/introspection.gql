@@ -1,17 +1,23 @@
 {
-    __schema {
-        queryType {
-            name
-        }
-        mutationType {
-            name
-        }
-        subscriptionType {
-            name
-        }
-        types {
+  __schema {
+    types {
+      name
+      kind
+      fields {
+        name
+        type {
+          name
+          kind
+          ofType {
             name
             kind
+            ofType {
+              name
+              kind
+            }
+          }
         }
+      }
     }
+  }
 }
