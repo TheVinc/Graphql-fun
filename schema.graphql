@@ -1,0 +1,11 @@
+type Restaurant {
+  name: String!
+}
+
+type MyQuery {
+  hello: String
+}
+
+schema {
+  query: MyQuery
+}
