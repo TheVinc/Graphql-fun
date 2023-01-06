@@ -1,3 +1,20 @@
+fragment TypeRef on __Type {
+    name
+    kind
+    ofType {
+      name
+      kind
+      ofType {
+        name
+        kind
+        ofType {
+          name
+          kind
+        }
+      }
+    }
+}
+
 {
   __schema {
     types {
@@ -6,16 +23,14 @@
       fields {
         name
         type {
+          ...TypeRef
+        }
+        args {
           name
-          kind
-          ofType {
-            name
-            kind
-            ofType {
-              name
-              kind
-            }
+          type {
+            ...TypeRef
           }
+          defaultValue
         }
       }
     }

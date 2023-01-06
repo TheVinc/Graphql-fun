@@ -1,3 +1,8 @@
+type Customer {
+  id: ID!
+  name: String
+}
+
 type Query {
-  hello: [String!]
+  customer(id: ID = 1): Customer!
 }
