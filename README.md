@@ -36,3 +36,7 @@ graph BT
 graph LR
   TFMAPI --> IntrospectionQuery --> SchemaGraphql --> IntrospectionJSON
 ```
+
+
+
+![Screenshot 2023-01-10 at 18 25 14](https://user-images.githubusercontent.com/2675574/211620291-b760a6d1-9bd0-4ff3-958f-35fba5f4f6e1.png)
