@@ -12,7 +12,7 @@ async function main() {
   // https://graphql.org/learn/execution/#root-fields-resolvers
   const overrideResolvers = {
     Query: {
-      customer: (_, args) => {
+      customer: () => {
         console.log("Query::customer");
 
         // Obj Type of Customer:
@@ -31,23 +31,21 @@ async function main() {
 
     // },
 
-
     // What VirtualMode does:
     // Role of Resolver:
     // InternalType --> SchemaType
     // Maps Internal Types to Schema Type
     // Example Internal Type comes from the Database
 
-
     // What is the Obj Type of Customer?
     // Store.Customer
     Customer: {
-      id: (_) => {
+      id: (_: { id: any }) => {
         console.log("Customer::id");
         console.log(_);
         return _.id;
       },
-      name: (_) => {
+      name: (_: { name: any }) => {
         console.log("Customer::name");
         console.log(_);
         return _.name;
@@ -66,16 +64,16 @@ async function main() {
 
   const response = await graphql({ schema: executableSchema, source });
   // npx ts-node index.ts queries/introspection.gql
-  // console.log(
-  //   JSON.stringify(
-  //     // @ts-expect-error
-  //     response.data?.__schema.types.filter((_type) => {
-  //       return !_type.name.startsWith("__");
-  //     }),
-  //     null,
-  //     2
-  //   )
-  // );
+  console.log(
+    JSON.stringify(
+      // @ts-expect-error
+      response.data?.__schema.types.filter((_type) => {
+        return !_type.name.startsWith("__");
+      }),
+      null,
+      2
+    )
+  );
 }
 
 // npx ts-node -T index.ts queries/query.gql
