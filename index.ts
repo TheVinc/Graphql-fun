@@ -1,4 +1,4 @@
-import { graphql, buildSchema } from "graphql";
+import { graphql } from "graphql";
 import { readFileSync } from "fs";
 import { makeExecutableSchema } from "@graphql-tools/schema";
 
@@ -23,22 +23,18 @@ async function main() {
           restaurantId: "5678",
         };
       },
+      restaurant: (parent, args, context) => {
+        // fetch from database / dataloaders
+        console.log("args", args);
+        // solution1: flag explicitly === branded type
+        // return { __typename: "NewRestaurant" };
+        return {
+          id: "1234",
+          name: "John Doe",
+          legacyId: "5678",
+        };
+      },
     },
-
-    // What is the Obj Type of Restaurant?
-    // Store.Restaurant
-    // Restaurant: {
-
-    // },
-
-    // What VirtualMode does:
-    // Role of Resolver:
-    // InternalType --> SchemaType
-    // Maps Internal Types to Schema Type
-    // Example Internal Type comes from the Database
-
-    // What is the Obj Type of Customer?
-    // Store.Customer
     Customer: {
       id: (_: { id: any }) => {
         console.log("Customer::id");
@@ -50,9 +46,33 @@ async function main() {
         console.log(_);
         return _.name;
       },
-      // restaurant: (_, args, { dataloaders }) => {
-      //   return dataloaders.Restaurant.load(_.restaurantId);
-      // }
+    },
+
+    Restaurant: {
+      // __resolveType: (obj) => {
+      //   // solution 2: 
+      //   console.log("Restaurant obj", obj);
+      //   return undefined;
+      //   return 'NewRestaurant';
+      //   return 'OldRestaurant';
+      // },
+    },
+    NewRestaurant: {
+      id: () => "new123",
+      name: () => "Some new restaurant",
+      __isTypeOf: (obj) => {
+        console.log("NewRestaurant obj", obj);
+        return !obj.legacyId;
+      },
+    },
+
+    OldRestaurant: {
+      id: () => "old123",
+      name: () => "Some Old Restaurant",
+      __isTypeOf: (obj) => {
+        console.log("OldRestaurant obj", obj);
+        return obj.legacyId;
+      },
     },
   };
 
@@ -63,17 +83,18 @@ async function main() {
   });
 
   const response = await graphql({ schema: executableSchema, source });
+  console.log("response", response);
   // npx ts-node index.ts queries/introspection.gql
-  console.log(
-    JSON.stringify(
-      // @ts-expect-error
-      response.data?.__schema.types.filter((_type) => {
-        return !_type.name.startsWith("__");
-      }),
-      null,
-      2
-    )
-  );
+  // console.log(
+  //   JSON.stringify(
+  //     // @ts-expect-error
+  //     response.data?.__schema.types.filter((_type) => {
+  //       return !_type.name.startsWith("__");
+  //     }),
+  //     null,
+  //     2
+  //   )
+  // );
 }
 
 // npx ts-node -T index.ts queries/query.gql

@@ -3,6 +3,20 @@ type Customer {
   name: String
 }
 
+type OldRestaurant {
+  id: ID
+  name: String
+  legacyId: ID
+}
+
+type NewRestaurant {
+  id: ID
+  name: String
+}
+
+union Restaurant = OldRestaurant | NewRestaurant
+
 type Query {
   customer(id: ID = 1): Customer!
+  restaurant(id: ID): Restaurant
 }

@@ -1,0 +1,13 @@
+query {
+  restaurant(id: "134") {
+    __typename
+    ... on NewRestaurant {
+      id
+      name
+    }
+    ... on OldRestaurant {
+      id
+      name
+    }
+  }
+}
